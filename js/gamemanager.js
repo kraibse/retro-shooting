@@ -3,13 +3,17 @@ const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeig
 
 const viewportScalingfactor = 0.5625;
 
+let canvas;
+let ui = new UI();
+
 function setup()
 {
     setSize();
 }
 
 function draw() {
-    background(125);
+    canvas.draw();
+    ui.draw();
 }
 
 function setSize() {
@@ -20,8 +24,7 @@ function setSize() {
         renderWidth = vw;
     }
 
-    var canvas = createCanvas(renderWidth, vh);
-    canvas.parent("canvas");
+    canvas = new Canvas(createCanvas(renderWidth, vh));
 
     select('#ui').size(renderWidth, vh);
 }

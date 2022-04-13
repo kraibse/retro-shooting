@@ -1,16 +1,16 @@
-Number.prototype.clamp = (num, min, max) => Math.min(Math.max(num, min), max);
-
 class Player
 {
     level = 1;
     xp = 0;
 
-    position = [0, 0];
+    posX = 0;
+    posY = 0;
     
     motionX = 0;
     motionY = 0;
 
-    maxSpeed = 1;
+    maxSpeed = 10;
+    drag = 0.97;
 
     model = "/resources/ships/default.png"
 
@@ -32,6 +32,14 @@ class Player
 
     addXP() {
 
+    }
+
+    applyResistance() {
+        this.motionX *= this.drag;
+        this.posX += this.motionX;
+
+        this.motionY *= this.drag;
+        this.posY += this.motionY;
     }
 
     damage() {
@@ -61,9 +69,21 @@ class Player
             this.motionY += this.maxSpeed / 60;
         }
 
-        this.motionX = Math.round(constrain(this.motionX, -1, this.maxSpeed) * 100) / 100;
-        this.motionY = Math.round(constrain(this.motionY, -1, this.maxSpeed) * 100) / 100;
+        this.motionX = Math.round(constrain(this.motionX, -1 * this.maxSpeed, this.maxSpeed) * 100) / 100;
+        this.motionY = Math.round(constrain(this.motionY, -1 * this.maxSpeed, this.maxSpeed) * 100) / 100;
 
+        this.posX += this.motionX;
+        this.posY += this.motionY;
+    }
+
+    render() {
+        stroke(173, 216, 230);
+        circle(this.posX, this.posY, 40);
+    }
+
+    setPos(x, y) {
+        this.posX = x;
+        this.posY = y;
     }
 
     shoot() {

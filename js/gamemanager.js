@@ -3,23 +3,33 @@ const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeig
 
 const viewportScalingfactor = 0.5625;
 
+class GameManager {
+    
+    constructor() {
+        this.player = new Player();
+    }
+
+    next() {
+        this.player.render();
+        this.player.applyResistance();
+    }
+}
+
 function setup()
 {
     setSize();
+    gm.player.setPos($("#defaultCanvas0").width() / 2, vh - 180);
 }
 
 function draw() {
-    background(125);
+    background(173,216,230);
+    gm.next();
 }
 
 function setSize() {
     
-    let renderWidth = vh * viewportScalingfactor;
-
-    if(renderWidth > vw) {
-        renderWidth = vw;
-    }
-
+    let renderWidth = Math.min(vw, vh * viewportScalingfactor);
+    
     var canvas = createCanvas(renderWidth, vh);
     canvas.parent("canvas");
 

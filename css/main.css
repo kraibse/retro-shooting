@@ -1,0 +1,22 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    overflow: hidden;
+}
+
+#bg{
+    background-color: hsl(0,0%,5%);
+    width: 100vw;
+    height: 100vh;
+}
+
+#canvas,
+#ui {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+}

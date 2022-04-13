@@ -4,6 +4,8 @@ const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeig
 const viewportScalingfactor = 0.5625;
 
 class GameManager {
+    deltaTime = 0;
+    screenOffset = 180;     // 180px padding
     
     constructor() {
         this.player = new Player();
@@ -11,6 +13,15 @@ class GameManager {
 
     next() {
         this.player.render();
+
+        this.player.bullets.forEach((b, index) => {
+            if (b.posy < this.screenOffset / 2) {
+                this.player.bullets.splice(index, 1);
+            }
+
+            b.move();
+        });
+
         this.player.applyResistance();
     }
 }
@@ -18,12 +29,15 @@ class GameManager {
 function setup()
 {
     setSize();
-    gm.player.setPos($("#defaultCanvas0").width() / 2, vh - 180);
+    gm.player.setPos($("#defaultCanvas0").width() / 2, vh - gm.screenOffset);
 }
 
 function draw() {
     background(173,216,230);
+
+    let startTime = Date.now();
     gm.next();
+    gm.deltaTime = Date.now() - startTime;
 }
 
 function setSize() {

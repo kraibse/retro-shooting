@@ -47,8 +47,6 @@ class Player
     }
 
     move(e) {
-        console.log(this.motionX, this.motionY);
-
         if (e.code == "ArrowLeft") {
             e.preventDefault();
             this.motionX += (-1) * this.maxSpeed / 60;

@@ -4,10 +4,11 @@ const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeig
 const viewportScalingfactor = 0.5625;
 
 let canvas;
-let ui = new UI();
+let ui = null;
 
 function setup()
 {
+    ui = new UI();
     setSize();
 }
 

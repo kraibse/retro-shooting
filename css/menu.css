@@ -1,0 +1,31 @@
+.menu .button-container {
+    display: flex;
+    flex-direction: row;
+    position: absolute;
+    bottom: 3rem;
+    left: 0;
+    right: 0;
+    justify-content: space-between;
+    padding: 0 2rem;
+}
+
+.menu .button {
+    font-family: 'Press Start 2P', cursive;
+    border: none;
+    border-radius: 25px;
+    font-size: 1.5rem;
+    padding: 0.5em 1em;
+    box-shadow: 0px 0px 10px 3px #454545;
+}
+
+.menu .button.shop {
+    background-color: #d0a564;
+}
+
+.menu .button.start {
+    background-color: #33d72a;
+}
+
+.menu .playericon {
+    
+}

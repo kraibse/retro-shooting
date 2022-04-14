@@ -32,7 +32,7 @@ class UI {
         this.states['menu'] = {
             init(ui_container) {
                 this.elements['shopbutton'] = document.createElement('button');
-                this.elements['shopbutton'].innerText = 'Shop';
+                this.elements['shopbutton'].innerText = 'SHOP';
                 this.elements['shopbutton'].classList.add('button');
                 this.elements['shopbutton'].classList.add('shop');
                 this.elements['shopbutton'].onclick = ()=> {
@@ -40,22 +40,23 @@ class UI {
                 }
 
                 this.elements['startbutton']= document.createElement('button');
-                this.elements['startbutton'].innerText = 'Start';
+                this.elements['startbutton'].innerText = 'START';
                 this.elements['startbutton'].classList.add('button');
                 this.elements['startbutton'].classList.add('start');
                 this.elements['startbutton'].onclick = ()=> {
                     ui.changeState('game');
                 }
 
-                this.elements['background']= document.createElement('div');
-                this.elements['background'].classList.add('background');
-
-                this.elements['playericon']= document.createElement('div');
-                this.elements['playericon'].classList.add('playericon');
+                this.elements['button-container']= document.createElement('div');
+                this.elements['button-container'].classList.add('button-container');
+                this.elements['button-container'].appendChild(this.elements['shopbutton']);
+                this.elements['button-container'].appendChild(this.elements['startbutton']);
 
                 Object.keys(this.elements).forEach(key => {
-                    ui_container.appendChild(this.elements[key]);
-                    ui_container.classList.add('menu');
+                    if(!this.excludes.includes(key)) {
+                        ui_container.appendChild(this.elements[key]);
+                        ui_container.classList.add('menu');
+                    }
                 });
             },
     
@@ -65,11 +66,17 @@ class UI {
     
             dispose(ui_container) {
                 Object.keys(this.elements).forEach(key => {
-                    this.elements[key].remove();
-                    ui_container.classList.remove('menu')
+                    if(!this.excludes.includes(key)) {
+                        this.elements[key].remove();
+                        ui_container.classList.remove('menu')
+                    }
                 });
             },
-            elements : {}
+            elements : {},
+            excludes : [
+                'shopbutton',
+                'startbutton'
+            ]
         }
 
         //Shop state

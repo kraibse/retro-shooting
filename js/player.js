@@ -5,8 +5,10 @@ class Player
     motionX = 0;
     motionY = 0;
 
-    drag = 0.97;
-    maxSpeed = 10;
+    size = 40;
+
+    drag = 1;
+    maxSpeed = 7.5;
 
     level = 1;
     xp = 0;
@@ -27,63 +29,54 @@ class Player
         this.speed = speed;
         this.dispersion = dispersion;
 
-        $(document).on("keydown", (e) => this.handleControls(e));
+        kd.LEFT.down( () => {
+            this.motionX = (-1) * this.maxSpeed;
+            this.motionY = 0;
+            this.posX = constrain(this.posX + this.motionX, this.size / 2, gm.width - this.size / 2);
+        });
+
+        kd.RIGHT.down( () => {
+            this.motionX = this.maxSpeed;
+            this.motionY = 0;
+            this.posX = constrain(this.posX + this.motionX, this.size / 2, gm.width - this.size / 2);
+        });
+
+        kd.UP.down( () => {
+            this.motionX = 0;
+            this.motionY = (-1) * this.maxSpeed;
+            this.posY = constrain(this.posY + this.motionY, this.size / 2, gm.height - this.size / 2);
+        });
+
+        kd.DOWN.down( () => {
+            this.motionX = 0;
+            this.motionY = this.maxSpeed;
+            this.posY = constrain(this.posY + this.motionY, this.size / 2, gm.height - this.size / 2);
+        });
+
+        kd.SPACE.down( () => {
+            this.shoot();
+        });
     }
 
     addXP() {
 
     }
 
-    applyResistance() {
-        this.motionX *= this.drag;
-        this.posX += this.motionX;
-
-        this.motionY *= this.drag;
-        this.posY += this.motionY;
-    }
-
     damage() {
 
     }
-
-    handleControls(e) {
-        if (e.code == "Space") {
-            this.shoot();
-        }
-
-        if (e.code == "ArrowLeft") {
-            e.preventDefault();
-            this.motionX += (-1) * this.maxSpeed / 60;
-
-        }
-        if (e.code == "ArrowRight") {
-            e.preventDefault();
-            this.motionX += this.maxSpeed / 60;
-        }
-
-        if (e.code == "ArrowUp") {
-            e.preventDefault();
-            this.motionY += (-1) * this.maxSpeed / 60;
-        }
-
-        if (e.code == "ArrowDown") {
-            e.preventDefault();
-            this.motionY += this.maxSpeed / 60;
-        }
-
-        this.motionX = Math.round(constrain(this.motionX, -1 * this.maxSpeed, this.maxSpeed) * 100) / 100;
-        this.motionY = Math.round(constrain(this.motionY, -1 * this.maxSpeed, this.maxSpeed) * 100) / 100;
-        this.move();
-    }
     
-    move() {
-        this.posX += this.motionX;
-        this.posY += this.motionY;
+    move() {        
+        this.posX = constrain(this.posX + this.motionX, this.size / 2, gm.width - this.size / 2);
+        this.posY = constrain(this.posY + this.motionY, this.size / 2, gm.height - this.size / 2);
+
+        // this.posX = constrain(this.posX + this.motionX * this.drag, this.size / 2, gm.width);
+        // this.posY = constrain(this.posY + this.motionY * this.drag, this.size / 2, gm.height);
     }
 
     render() {
         stroke(173, 216, 230);
-        circle(this.posX, this.posY, 40);
+        circle(this.posX, this.posY, this.size);
     }
 
     setPos(x, y) {

@@ -16,12 +16,15 @@ class Player
     upgrades = {
         "automatic_shooting": false,
         "damage": 1,
-        "dispersion": 0.5
+        "dispersion": 0.5,
+        "maxBullets": 30,
+        "shootingDelay": 5              // 10 = 1 sec
     }    
 
     model = "/resources/ships/default.png"
 
     bullets = []
+    bulletTimer = 0;
 
     constructor(name, damage, speed, dispersion) {
         this.name = name;
@@ -54,7 +57,14 @@ class Player
         });
 
         kd.SPACE.down( () => {
-            this.shoot();
+            if (this.bulletTimer <= 0) {
+                this.shoot();
+                this.bulletTimer = this.upgrades["shootingDelay"];
+            }
+            else {
+                this.bulletTimer -= gm.deltaTime;
+            }
+            
         });
     }
 

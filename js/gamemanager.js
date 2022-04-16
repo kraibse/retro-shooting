@@ -12,6 +12,7 @@ class GameManager {
     perfectFrame = 1000 / 60;
     
     screenOffset = 180;     // 180px padding
+    enemies = [];
     
     constructor() {
         this.player = new Player();
@@ -20,6 +21,14 @@ class GameManager {
 
     next() {
         this.player.render();
+
+        this.enemies.forEach((e, index) => {
+            e.move();
+            if (e.y > gm.height - gm.screenOffset) {
+                this.enemies.splice(index, 1);
+                gm.enemies.push(new Enemy());
+            }
+        });
         
         this.player.bullets.forEach((b, index) => {
             if (b.posy < this.screenOffset / 2) {
@@ -46,6 +55,11 @@ function setup()
 {
     gm.setSize();
     gm.player.setPos(gm.width / 2, vh - gm.screenOffset);
+
+    for (let i = 0; i < 30; i++) {
+        gm.enemies.push(new Enemy());
+        console.log(gm.enemies[i].x, gm.enemies[i].y);
+    }
 }
 
 function draw() {

@@ -8,7 +8,7 @@ class Enemy {
 
     homing = true;
     damage = 1;
-    size = 5;
+    size = 10;
 
     bullets = [];
 
@@ -19,11 +19,21 @@ class Enemy {
         this.render();
     }
 
+    isOnScreen() {
+        return this.x > 0 && this.x < gm.width && this.y > 0 && this.y < gm.height;
+    }
+
+    getPos() {
+        return new p5.Vector(this.x, this.y);
+    }
+
     move() {
         this.y++;
         stroke(112, 41, 99);
-        circle(this.x, this.y, this.size);
-        this.render();
+        // circle(this.x, this.y, this.size);
+        if (this.isOnScreen()) {
+            this.render();
+        }
     }
 
     render() {
@@ -35,7 +45,7 @@ class Enemy {
         // triangle base
         let x2 = this.x - this.size/2;
         let y2 = this.y - this.size/2;
-        let x3 = this.x - this.size/2;
+        let x3 = this.x + this.size/2;
         let y3 = this.y - this.size/2;
 
         triangle(x1, y1, x2, y2, x3, y3);

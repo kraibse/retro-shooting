@@ -24,17 +24,21 @@ class GameManager {
 
         this.enemies.forEach((e, index) => {
             e.move();
-            if (e.y > gm.height - gm.screenOffset) {
+            // e.render();
+            if (e.y > gm.height) {
                 this.enemies.splice(index, 1);
                 gm.enemies.push(new Enemy());
             }
         });
         
         this.player.bullets.forEach((b, index) => {
-            if (b.posy < this.screenOffset / 2) {
+            if (b.y < 0) {
+                this.player.bulletMagazine.push(this.player.bullets[index]);
                 this.player.bullets.splice(index, 1);
-            }    
-            b.move();
+            } else {
+                b.checkCollisions();
+                b.move();
+            }
         });
     }
     
@@ -58,8 +62,11 @@ function setup()
 
     for (let i = 0; i < 30; i++) {
         gm.enemies.push(new Enemy());
-        console.log(gm.enemies[i].x, gm.enemies[i].y);
     }
+
+    // let e = new Enemy(gm.width / 2, gm.screenOffset);
+    // e.setPos(gm.width / 2, 400);
+    // gm.enemies.push(e);
 }
 
 function draw() {

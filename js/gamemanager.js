@@ -17,6 +17,19 @@ class GameManager {
     constructor() {
         this.player = new Player();
         this.screenOffset = this.player.size * 4;
+        this.isGameOver = false;
+        this.offsetY = Date.now();
+        this.background = [];
+        this.backgroundTimer = 100;
+    }
+
+    drawBackground() {
+        for (let i = 0; i < this.background.length; i++) {
+            this.background[i].forEach((bg, x) => {
+                stroke(bg);
+                line(x, i, x, i);
+            });
+        }
     }
 
     next() {
@@ -24,7 +37,8 @@ class GameManager {
 
         this.enemies.forEach((e, index) => {
             e.move();
-            // e.render();
+            e.checkCollisions();
+
             if (e.y > gm.height) {
                 this.enemies.splice(index, 1);
                 gm.enemies.push(new Enemy());
@@ -40,7 +54,24 @@ class GameManager {
             }
         });
     }
-    
+
+    gameOver() {
+        this.isGameOver = true;
+    }
+
+    generateBackground() {
+        let off = this.bgOffset + 0.01;
+
+        colorMode(HSL, 255, 100, 255);
+        let row = [];
+        for (let x = 0; x < vw; x++) {
+            let value = color(201, 100, noise(x, off) * 100);
+            row.push(value);
+        }
+        // colorMode(RGB, 255);
+        return row;
+    }
+
     setSize() {
         let renderWidth = Math.min(vw, vh * viewportScalingfactor);
         
@@ -59,14 +90,27 @@ function setup()
     gm.setSize();
     gm.player.setPos(gm.width / 2, vh - gm.screenOffset);
 
+    for (let y = 0; y < vh; y++) {
+        // gm.background.unshift(gm.generateBackground());
+    }
+
     for (let i = 0; i < 30; i++) {
         gm.enemies.push(new Enemy());
     }
 }
 
 function draw() {
+    if (gm.isGameOver) { 
+        $("#game-over").show();
+        return;
+    }
+    
     let timestamp = Date.now();
-    background(173,216,230);
+   
+    background(16, 171, 255);
+    // gm.background.unshift(gm.generateBackground());
+    // gm.background.pop();
+    // gm.drawBackground();
 
     kd.tick();  // keydrown handler tick
     gm.next();

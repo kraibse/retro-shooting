@@ -18,7 +18,8 @@ class Player
         "damage": 1,
         "dispersion": 0.5,
         "maxBullets": 10,
-        "shootingDelay": 10            // 10 = 1 sec
+        "reloadTime": 1,        // 1 = 1 second
+        "shootingDelay": 10     // 10 = 1 sec
     }    
 
     model = "/resources/ships/default.png"
@@ -93,6 +94,10 @@ class Player
     }
 
     reloadMagazine() {
+        setTimeout(this.upgrades.reloadTime * 1000, () => {
+            return;
+        });
+
         this.bulletMagazine = [];
         for (let i = 0; i < this.upgrades.maxBullets; i++) {
             this.bulletMagazine.push(new Bullet());
@@ -106,6 +111,9 @@ class Player
 
     shoot() {
         if (this.bulletMagazine.length == 0) {
+            if (this.bullets.length == 0) {
+                this.reloadMagazine();
+            }
             return;
         }
 

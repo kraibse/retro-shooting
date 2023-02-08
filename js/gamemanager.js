@@ -36,7 +36,7 @@ class GameManager {
                 this.player.bulletMagazine.push(this.player.bullets[index]);
                 this.player.bullets.splice(index, 1);
             } else {
-                b.checkCollisions();
+                b.checkCollisions();    // disabled collision for off screen enemies
                 b.move();
             }
         });
@@ -63,10 +63,6 @@ function setup()
     for (let i = 0; i < 30; i++) {
         gm.enemies.push(new Enemy());
     }
-
-    // let e = new Enemy(gm.width / 2, gm.screenOffset);
-    // e.setPos(gm.width / 2, 400);
-    // gm.enemies.push(e);
 }
 
 function draw() {

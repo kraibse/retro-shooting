@@ -17,13 +17,14 @@ class Player
         "automatic_shooting": false,
         "damage": 1,
         "dispersion": 0.5,
-        "maxBullets": 30,
-        "shootingDelay": 5              // 10 = 1 sec
+        "maxBullets": 10,
+        "shootingDelay": 10            // 10 = 1 sec
     }    
 
     model = "/resources/ships/default.png"
 
     bullets = []
+    bulletMagazine = [];
     bulletTimer = 0;
 
     constructor(name, damage, speed, dispersion) {
@@ -31,6 +32,8 @@ class Player
         this.damage = damage;
         this.speed = speed;
         this.dispersion = dispersion;
+
+        this.reloadMagazine();
 
         kd.LEFT.down( () => {
             this.motionX = (-1) * this.maxSpeed;
@@ -59,7 +62,7 @@ class Player
         kd.SPACE.down( () => {
             if (this.bulletTimer <= 0) {
                 this.shoot();
-                this.bulletTimer = this.upgrades["shootingDelay"];
+                this.bulletTimer = this.upgrades.shootingDelay;
             }
             else {
                 this.bulletTimer -= gm.deltaTime;
@@ -89,21 +92,31 @@ class Player
         circle(this.posX, this.posY, this.size);
     }
 
+    reloadMagazine() {
+        this.bulletMagazine = [];
+        for (let i = 0; i < this.upgrades.maxBullets; i++) {
+            this.bulletMagazine.push(new Bullet());
+        }
+    }
+
     setPos(x, y) {
         this.posX = x;
         this.posY = y;
     }
 
     shoot() {
-        // generate spreading modifier between -1 and 1
-        let dispersion = (2 * Math.random() - 1) * this.upgrades["dispersion"];
-        let damage = this.upgrades["damage"];
+        if (this.bulletMagazine.length == 0) {
+            return;
+        }
 
-        this.bullets.push(new Bullet(
-            this.posX,
-            this.posY,
-            damage,
-            dispersion
-        ));
+        // generate spreading modifier between -1 and 1
+        
+        let bullet = this.bulletMagazine.pop();
+        bullet.setPos(this.posX, this.posY);
+        
+        let dispersion = (2 * Math.random() - 1) * this.upgrades.dispersion;
+        let damage = this.upgrades.damage;
+        bullet.setProperties(bullet.size, damage, dispersion);
+        this.bullets.push(bullet);
     }
 }

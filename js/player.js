@@ -17,8 +17,9 @@ class Player
         "automatic_shooting": false,
         "damage": 1,
         "dispersion": 0.5,
-        "maxBullets": 10,
-        "reloadTime": 1,        // 1 = 1 second
+        "maxBullets": 30,
+        "maxHealth": 100,
+        "reloadTime": 0,        // 1 = 1 second
         "shootingDelay": 10     // 10 = 1 sec
     }    
 
@@ -33,6 +34,7 @@ class Player
         this.damage = damage;
         this.speed = speed;
         this.dispersion = dispersion;
+        this.health = this.upgrades.maxHealth;
 
         this.reloadMagazine();
 
@@ -57,7 +59,7 @@ class Player
         kd.DOWN.down( () => {
             this.motionX = 0;
             this.motionY = this.maxSpeed;
-            this.posY = constrain(this.posY + this.motionY, this.size / 2, gm.height - this.size / 2);
+            this.posY = constrain(this.posY + this.motionY, this.size / 2, gm.height - this.size / 2 - gm.height/10);
         });
 
         kd.SPACE.down( () => {
@@ -76,13 +78,40 @@ class Player
 
     }
 
-    damage() {
+    hit(damage) {
+        this.health = this.health - damage;
 
+        let percentage = Math.floor(this.upgrades.maxHealth * this.health/100);
+        
+        let color = "1ed760";   // green
+        
+        if (percentage > 25 && percentage <= 50) {
+            color = "ff9807";
+        }
+        if (percentage <= 25) {
+            color = "dc3545";
+        }
+        if (percentage <= 0) {
+            color = "333";
+        }
+        
+        $("#health").text(percentage + "%")
+                    .css("width", percentage + "%")
+                    .css("background-color", "#" + color);
+
+        if (this.health <= 0) {
+            $("#health").css("width", 100 + "%");
+            gm.gameOver();
+        }
+    }
+
+    getPos() {
+        return new p5.Vector(this.posX, this.posY);
     }
     
     move() {        
         this.posX = constrain(this.posX + this.motionX, this.size / 2, gm.width - this.size / 2);
-        this.posY = constrain(this.posY + this.motionY, this.size / 2, gm.height - this.size / 2);
+        this.posY = constrain(this.posY + this.motionY, this.size / 2, gm.height - this.size / 2 - 240);
 
         // this.posX = constrain(this.posX + this.motionX * this.drag, this.size / 2, gm.width);
         // this.posY = constrain(this.posY + this.motionY * this.drag, this.size / 2, gm.height);
@@ -91,17 +120,18 @@ class Player
     render() {
         stroke(173, 216, 230);
         circle(this.posX, this.posY, this.size);
+        $("#loader").css("left", this.posX + this.size/3);
+        $("#loader").css("top", this.posY - this.size);
     }
 
     reloadMagazine() {
-        setTimeout(this.upgrades.reloadTime * 1000, () => {
-            return;
-        });
+        console.log("Reloading");
 
         this.bulletMagazine = [];
         for (let i = 0; i < this.upgrades.maxBullets; i++) {
             this.bulletMagazine.push(new Bullet());
         }
+        // $(".loader").hide();
     }
 
     setPos(x, y) {
@@ -112,6 +142,12 @@ class Player
     shoot() {
         if (this.bulletMagazine.length == 0) {
             if (this.bullets.length == 0) {
+                // document.getElementById("loader").style.display = "block";
+                let delay = this.upgrades.reloadTime * 1000;
+                $("#loader").show().delay(delay).queue((next) => {
+                    $(this).hide();
+                    next();
+                });
                 this.reloadMagazine();
             }
             return;

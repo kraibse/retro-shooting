@@ -1,6 +1,4 @@
 class Enemy {
-    x = 0;
-    y = 0;
     rotation = 0;
 
     width = 10;
@@ -12,11 +10,13 @@ class Enemy {
 
     bullets = [];
 
-    constructor() {
+    constructor(x, y) {
         this.type = 0;
-        this.x = Math.random() * gm.width;
-        this.y = Math.random() * gm.height;
-        this.render();
+        if (x == undefined  && y == undefined) { this.respawn(); }
+        else {
+            this.x = x;
+            this.y = y;
+        }
     }
 
     isOnScreen() {
@@ -37,17 +37,26 @@ class Enemy {
     }
 
     render() {
-        
         // triangle top
         let x1 = this.x;
-        let y1 = this.y + this.size/2;
+        let y1 = this.y + this.height/2;
 
         // triangle base
-        let x2 = this.x - this.size/2;
-        let y2 = this.y - this.size/2;
-        let x3 = this.x + this.size/2;
-        let y3 = this.y - this.size/2;
+        let x2 = this.x - this.width/2;
+        let y2 = this.y - this.height/2;
+        let x3 = this.x + this.width/2;
+        let y3 = this.y - this.height/2;
 
         triangle(x1, y1, x2, y2, x3, y3);
+    }
+
+    respawn() {
+        this.x = Math.random() * gm.width;
+        this.y = -Math.random() * gm.height;
+    }
+
+    setPos(x, y) { 
+        this.x = x;
+        this.y = y;
     }
 }

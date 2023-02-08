@@ -5,7 +5,7 @@ class Enemy {
     height = 20;
 
     homing = true;
-    damage = 1;
+    damage = 10;
     size = 10;
 
     bullets = [];
@@ -16,6 +16,17 @@ class Enemy {
         else {
             this.x = x;
             this.y = y;
+        }
+    }
+
+    checkCollisions() {
+        let distanceVector = p5.Vector.sub(gm.player.getPos(), this.getPos());
+        let mag = distanceVector.mag();
+        let minDistance = this.size + gm.player.size;
+
+        if (mag < minDistance) {
+            gm.player.hit(this.damage);
+            this.respawn();
         }
     }
 

@@ -33,7 +33,6 @@ class GameManager {
         
         this.player.bullets.forEach((b, index) => {
             if (b.y < 0) {
-                this.player.bulletMagazine.push(this.player.bullets[index]);
                 this.player.bullets.splice(index, 1);
             } else {
                 b.checkCollisions();    // disabled collision for off screen enemies

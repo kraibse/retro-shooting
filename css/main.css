@@ -5,18 +5,26 @@
 
 body {
     overflow: hidden;
+    width: 100vw;
+    height: 100vh;
+    background-color: #333;
 }
 
 #bg{
-    background-color: rgb(70, 70, 70);
-    width: 100vw;
-    height: 100vh;
+    /* background-color: #10abff; */
+    z-index: -100;
 }
 
-#canvas,
+#canvas, #ui {
+    align-content: center;
+    text-align: center;
+}
+
+#canvas {
+    background-color: #161d20;
+}
+
 #ui {
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
+    position: fixed;
+    bottom: 0;
 }

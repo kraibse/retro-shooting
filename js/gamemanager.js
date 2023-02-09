@@ -18,22 +18,22 @@ class GameManager {
         this.player = new Player();
         this.screenOffset = this.player.size * 4;
         this.isGameOver = false;
-        this.offsetY = Date.now();
+
         this.background = [];
-        this.backgroundTimer = 100;
     }
 
     drawBackground() {
-        for (let i = 0; i < this.background.length; i++) {
-            this.background[i].forEach((bg, x) => {
-                stroke(bg);
-                line(x, i, x, i);
-            });
-        }
+        
     }
 
     next() {
         this.player.render();
+
+        // this.backgroundTimer -= this.deltaTime;
+        // if (this.backgroundTimer < 0) {
+        //     this.backgroundTimer = 100;
+        //     this.generateBackground();
+        // }
 
         this.enemies.forEach((e, index) => {
             e.move();
@@ -60,16 +60,18 @@ class GameManager {
     }
 
     generateBackground() {
-        let off = this.bgOffset + 0.01;
+        this.offsetY -= 0.1;
 
-        colorMode(HSL, 255, 100, 255);
-        let row = [];
-        for (let x = 0; x < vw; x++) {
-            let value = color(201, 100, noise(x, off) * 100);
-            row.push(value);
+        this.graphics.noStroke();
+        for (let y=0; y < height; y+=10) {
+            let offset = this.offsetY + y/10 * 0.1;
+
+            for (let x=0; x < width; x+=10) {
+                let value = noise(x * 0.01, offset);
+                this.graphics.fill(value);
+                this.graphics.rect (x, y, 10, 10);
+            }
         }
-        // colorMode(RGB, 255);
-        return row;
     }
 
     setSize() {
@@ -88,11 +90,12 @@ class GameManager {
 function setup()
 {
     gm.setSize();
+    colorMode(HSL, 360, 1, 1, 1);
+    gm.graphics = createGraphics(width, height);
+    gm.graphics.colorMode(HSL, 360, 1, 1, 1);
+    
+    gm.offsetY = random();
     gm.player.setPos(gm.width / 2, vh - gm.screenOffset);
-
-    for (let y = 0; y < vh; y++) {
-        // gm.background.unshift(gm.generateBackground());
-    }
 
     for (let i = 0; i < 30; i++) {
         gm.enemies.push(new Enemy());
@@ -107,10 +110,9 @@ function draw() {
     
     let timestamp = Date.now();
    
-    background(16, 171, 255);
-    // gm.background.unshift(gm.generateBackground());
-    // gm.background.pop();
-    // gm.drawBackground();
+    background(109, 169, 149);
+    gm.generateBackground();
+    image(gm.graphics, 0, 0);
 
     kd.tick();  // keydrown handler tick
     gm.next();

@@ -29,12 +29,6 @@ class GameManager {
     next() {
         this.player.render();
 
-        // this.backgroundTimer -= this.deltaTime;
-        // if (this.backgroundTimer < 0) {
-        //     this.backgroundTimer = 100;
-        //     this.generateBackground();
-        // }
-
         this.enemies.forEach((e, index) => {
             e.move();
             e.checkCollisions();

@@ -12,7 +12,7 @@ class Enemy {
 
     constructor(x, y) {
         this.type = 0;
-        if (x == undefined  && y == undefined) { this.respawn(); }
+        if (!x  && !y) { this.respawn(); }
         else {
             this.x = x;
             this.y = y;
